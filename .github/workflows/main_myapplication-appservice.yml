@@ -12,11 +12,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-       - name: Copy Release Folder
+      - name: Copy Release Folder
         run: |
           mkdir ${{ github.workspace }}/folder-to-publish
           cp -R path/to/folder/* ${{ github.workspace }}/folder-to-publish/
@@ -26,24 +26,10 @@ jobs:
         with:
           name: published-folder
           path: ${{ github.workspace }}/folder-to-publish
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: .net-app
 
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'myApplication-AppService'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E3B16492EF69471D88C6A306BD2695D1 }}
-          package: .
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} 
