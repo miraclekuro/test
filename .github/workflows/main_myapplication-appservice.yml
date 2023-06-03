@@ -19,9 +19,9 @@ jobs:
       - name: Copy Release Folder
         run: |
           mkdir ${{ github.workspace }}/folder-to-publish
-          cp -R path/to/folder/* ${{ github.workspace }}/folder-to-publish/
-
-      - name: Publish Artifact
+            mv path/to/folder/* ${{ github.workspace }}/folder-to-publish/
+            if [ -z "$(ls -A ${{ github.workspace }}/folder-to-publish)" ]; then echo "No files or directory found in path/to/folder"; fi
+      - name: Publish Artifact  
         uses: actions/upload-artifact@v2
         with:
           name: published-folder
